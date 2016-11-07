@@ -132,7 +132,8 @@ test( "diff", t => {
                         expected
                     )
                 );
-
+            
+                t.end();
 
             } );
 
@@ -149,6 +150,9 @@ test( "diff", t => {
 
                 const res = diff( previous, next );
 
+                t.ok( _.isEqual( res, expected ) );
+
+                t.end();
 
             } );
 
