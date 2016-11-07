@@ -1,12 +1,12 @@
 "use strict";
-const test = require("tape");
-const { diff, type, ObjectIterator } = require("./diff");
-const _ = require("lodash");
+const test = require( "tape" );
+const { diff, type, ObjectIterator } = require( "./diff" );
+const _ = require( "lodash" );
 
 
-test("diff", t => {
+test( "diff", t => {
 
-    t.test("Diff defines new types", t => {
+    t.test( "Diff defines new types", t => {
 
         const types = {
             "array": [],
@@ -16,18 +16,18 @@ test("diff", t => {
             "string": "string"
         };
 
-        Object.keys(types).forEach(typeString => {
+        Object.keys( types ).forEach( typeString => {
 
-            const value = types[typeString];
-            t.ok(type(value) === typeString, typeString);
+            const value = types[ typeString ];
+            t.ok( type( value ) === typeString, typeString );
 
-        });
+        } );
 
-        t.end(); 
-    });
+        t.end();
+    } );
 
 
-    t.test("diff does not accept non objects primitives", t => {
+    t.test( "diff does not accept non objects primitives", t => {
 
         const object = {};
         const nonObjects = [
@@ -36,36 +36,36 @@ test("diff", t => {
             1
         ];
 
-        nonObjects.forEach(value => {
+        nonObjects.forEach( value => {
 
-            t.throws(() => {
+            t.throws( () => {
 
-                diff(object, value);
+                diff( object, value );
 
-            }, "throws with " + type(value) + " as second arg");
+            }, "throws with " + type( value ) + " as second arg" );
 
 
-            t.throws(() => {
+            t.throws( () => {
 
-                diff(value);
+                diff( value );
 
-            }, "throws with " + type(value) + " as first arg");
+            }, "throws with " + type( value ) + " as first arg" );
 
-        });
+        } );
 
 
         t.end();
 
-    });
+    } );
 
 
-    t.test("We have expected output", t => {
+    t.test( "We have expected output", t => {
 
-        t.test("When passing different data structure", t => {
+        t.test( "When passing different data structure", t => {
 
-            const 
-            a = {a: 1},
-                b = [1, 2],
+            const
+                a = { a: 1 },
+                b = [ 1, 2 ],
                 expected = {
                     same: null,
                     previous: a,
@@ -73,17 +73,17 @@ test("diff", t => {
                 };
 
             t.ok(
-                _.isEqual(diff(a, b), expected, "A full diff")
+                _.isEqual( diff( a, b ), expected, "A full diff" )
             );
 
             t.end();
 
-        });
+        } );
 
-        t.test("When passing same data structure", t => {
+        t.test( "When passing same data structure", t => {
 
-            const 
-            a = {a: 1},
+            const
+                a = { a: 1 },
                 expected = {
                     same: a,
                     previous: null,
@@ -91,81 +91,103 @@ test("diff", t => {
                 };
 
             t.ok(
-                _.isEqual(diff(a, a), expected, "A null diff")
+                _.isEqual( diff( a, a ), expected, "A null diff" )
             );
 
             t.end();
 
-        });
+        } );
 
-        t.test("When passing the same data structure but with different items", t => {
-        
-            const 
-                previous = {
-                    a: 1,
-                    b: 2
-                },
-                next = {
-                    a: 1,
-                    b: 3,
-                    c: 4
-                },
-                expected = {
-                    same: {
-                        a: 1
-                    },
-                    previous: {
+        t.test( "When passing the same data structure but with different items", t => {
+
+            t.test( "with an object", t => {
+
+
+                const
+                    previous = {
+                        a: 1,
                         b: 2
                     },
-                    next: {
+                    next = {
+                        a: 1,
                         b: 3,
                         c: 4
-                    }
-                };
+                    },
+                    expected = {
+                        same: {
+                            a: 1
+                        },
+                        previous: {
+                            b: 2
+                        },
+                        next: {
+                            b: 3,
+                            c: 4
+                        }
+                    };
 
-            t.ok(
+                t.ok(
                     _.isEqual(
-                            diff(previous, next),
-                            expected
-                        )
+                        diff( previous, next ),
+                        expected
+                    )
                 );
 
+
+            } );
+
+            t.test( "with an array", t => {
+
+                const
+                    previous = [ 1, 2 ],
+                    next = [ 1, 3, 4 ],
+                    expected = {
+                        same: [ 1 ],
+                        previous: [ undefined, 2 ],
+                        next: [ undefined, 3, 4 ]
+                    };
+
+                const res = diff( previous, next );
+
+
+            } );
+
             t.end();
-        
-        });
+
+        } );
 
         t.end();
 
-    });
+    } );
 
     t.end();
-});
+} );
 
 
-test("ObjectIterator", t => {
+test( "ObjectIterator", t => {
 
     const id = x => x;
-    const iteratee = (acc, value, key) => {
+    const iteratee = ( acc, value, key ) => {
 
-        acc.push([value, key]);
+        acc.push( [ value, key ] );
         return acc;
 
     };
 
-    t.test("with empty object", t => {
+    t.test( "with empty object", t => {
 
         const emptyObject = {};
-        const emptyObjectIterator = new ObjectIterator(emptyObject);
+        const emptyObjectIterator = new ObjectIterator( emptyObject );
 
         t.ok(
-            _.isEqual(emptyObjectIterator.map(x => x), []),
+            _.isEqual( emptyObjectIterator.map( x => x ), [] ),
             "mapping returns empty array"
         );
 
-        
+
         t.ok(
             _.isEqual(
-                emptyObjectIterator.reduce(iteratee, []), 
+                emptyObjectIterator.reduce( iteratee, [] ),
                 []
             ),
             "reducing returns empty array"
@@ -173,26 +195,26 @@ test("ObjectIterator", t => {
 
         t.end();
 
-    });
+    } );
 
 
-    t.test("with non empty object", t => {
+    t.test( "with non empty object", t => {
 
         const object = {
             a: 1,
             b: 2
         };
-        const iterator = new ObjectIterator(object);
+        const iterator = new ObjectIterator( object );
         t.ok(
-            _.isEqual(iterator.map(id), [1, 2]),
+            _.isEqual( iterator.map( id ), [ 1, 2 ] ),
             "mapping returns an array with the values"
         );
 
         t.ok(
-            _.isEqual(iterator.reduce(iteratee, []),
+            _.isEqual( iterator.reduce( iteratee, [] ),
                 [
-                    [1, "a"],
-                    [2, "b"]
+                    [ 1, "a" ],
+                    [ 2, "b" ]
                 ]
             ),
             "reducing an array of [value, key]"
@@ -200,6 +222,6 @@ test("ObjectIterator", t => {
 
         t.end();
 
-    });
+    } );
 
-});
+} );
