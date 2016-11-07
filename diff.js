@@ -84,12 +84,6 @@ function makeIterator (object) {
 
 }
 
-function reduce (iterator) {
-
-    
-
-}
-
 
 
 function diff (previous, next) {
@@ -164,7 +158,20 @@ function _diff (previous, next) {
             // apply alogirithm to diff 
             if (tn === "object") {
             
-                const same = previousMap();
+                const same = iNext.reduce((same, value, key) => {
+                
+                    const prev = previous[key];
+                    if (eq(value, prev)) {
+                    
+                        same.push([key, value]);
+                    
+                    }
+                    
+                    return same;
+                
+                });
+
+
             
             } else {  }
 
