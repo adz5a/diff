@@ -98,6 +98,42 @@ test("diff", t => {
 
         });
 
+        t.test("When passing the same data structure but with different items", t => {
+        
+            const 
+                previous = {
+                    a: 1,
+                    b: 2
+                },
+                next = {
+                    a: 1,
+                    b: 3,
+                    c: 4
+                },
+                expected = {
+                    same: {
+                        a: 1
+                    },
+                    previous: {
+                        b: 2
+                    },
+                    next: {
+                        b: 3,
+                        c: 4
+                    }
+                };
+
+            t.ok(
+                    _.isEqual(
+                            diff(previous, next),
+                            expected
+                        )
+                );
+
+            t.end();
+        
+        });
+
         t.end();
 
     });
