@@ -102,7 +102,7 @@ test( "diff", t => {
 
             const
                 expected = {
-                    same: {},
+                    same: null,
                     previous: null,
                     next: null
                 };
