@@ -162,47 +162,63 @@ function _diff ( previous, next ) {
                 sameKeys = new Set();
 
 
+            // we loop upon the next keys
+            // to see if there is any match with previous keys
+            // using
             iNext.map( ( value, key ) => {
 
-                const prev = previous[ key ];
-                if ( eq( value, prev ) ) {
-                    //if the values are equal 
-                    //according to eq then push
-                    //them into the same array
 
-                    sameValues.push( [ key, value ] );
-                    sameKeys.add( key );
+                if ( !previous.hasOwnProperty( key ) ) {
+
+                    nextValues.push( [ key, value ] );
 
                 } else {
-                    //if they are different push them respectively 
-                    //to the previous and next arrays.
 
+                    const prev = previous[ key ];
                     const
                         tp = type( prev ),
-                        tv = type( value );
+                        tn = type( value );
 
-                    if ( tp === tv && (tp === "array" || tp === "object") ) {
-                        // we have two value of same types but different
-                        // so they must be data structures
-                        // we have to diff them
-                        const d = _diff( prev, value );
-                        console.log( d );
+                    // if not equal we have two cases
+                    if ( !eq( value, prev ) ) {
 
-                        throw new Error( "not implemented yet" );
+                        // same type => we have non strict equal data structure
+                        if ( tp === tn ) {
 
+                            const { same, previous, next } = _diff( prev, value );
+                            // different types => we update the two arrays and proceed
 
-                    } else {
-                        // we proceed
+                            if ( previous !== null ) {
 
-                        nextValues.push( [ key, value ] );
-                        if ( previous.hasOwnProperty( key ) ) {
+                                previousValues.push( [ key, prev ] );
+
+                            }
+                            if ( next !== null ) {
+
+                                nextValues.push( [ key, value ] );
+
+                            }
+                            if ( same !== null ) {
+
+                                sameValues.push( [ key, same ] );
+
+                            }
+
+                        } else {
 
                             previousValues.push( [ key, prev ] );
+                            nextValues.push( [ key, value ] );
 
                         }
 
-                    }
 
+                    } else {
+                        // if we have equality
+                        // then we update the array
+                        sameValues.push( [ key, value ] );
+                        sameKeys.add( key );
+
+                    }
 
                 }
 

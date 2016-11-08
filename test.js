@@ -133,10 +133,25 @@ test( "diff", t => {
                     }
                 },
                 expected = {
-                    same: null
+                    same: null,
+                    previous: {
+                        a: {
+                            b: 1
+                        }
+                    },
+                    next: {
+                        a: {
+                            b: 3
+                        }
+                    }
                 };
 
-            t.ok();
+            t.ok(
+                _.isEqual(
+                    diff( a, b ),
+                    expected
+                )
+            );
 
             t.end();
         } );
@@ -213,7 +228,7 @@ test( "diff", t => {
 
                 t.ok(
                     _.isEqual(
-                        diff(next, previous),
+                        diff( next, previous ),
                         {
                             same: null,
                             previous: {
