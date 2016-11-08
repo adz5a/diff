@@ -101,7 +101,6 @@ test( "diff", t => {
         t.test( "when passing two empty data structures", t => {
 
 
-
             let d;
             d = diff( {}, {} );
             t.ok(
@@ -268,6 +267,25 @@ test( "diff", t => {
 
                 t.end();
 
+            } );
+
+            t.test( "test with arrays included in one another", t => {
+
+                const set = [ 1, 2, 3 ];
+                const subset = [ 1, 2 ];
+                const expect = {
+                    same: [ 1, 2 ],
+                    previous: null,
+                    next: [ undefined, undefined, 3 ]
+                };
+
+                const d = diff( subset, set );
+                console.log( d );
+                t.ok(
+                    _.isEqual( d, expect )
+                );
+
+                t.end();
             } );
 
             t.end();
