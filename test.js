@@ -100,20 +100,25 @@ test( "diff", t => {
 
         t.test( "when passing two empty data structures", t => {
 
-            const
-                expected = {
-                    same: null,
-                    previous: null,
-                    next: null
-                };
 
 
+            let d;
+            d = diff( {}, {} );
             t.ok(
-                _.isEqual( diff( {}, {} ), expected )
+                _.isEqual( d, {
+                    same: null,
+                    previous: {},
+                    next: {}
+                } )
             );
 
+            d = diff( [], [] );
             t.ok(
-                _.isEqual( diff( [], [] ), expected )
+                _.isEqual( d, {
+                    same: null,
+                    previous: [],
+                    next: []
+                } )
             );
             t.end();
         } );
