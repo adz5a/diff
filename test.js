@@ -98,6 +98,49 @@ test( "diff", t => {
 
         } );
 
+        t.test( "when passing two empty data structures", t => {
+
+            const
+                expected = {
+                    same: {},
+                    previous: null,
+                    next: null
+                };
+
+
+            t.ok(
+                _.isEqual( diff( {}, {} ), expected )
+            );
+
+            t.ok(
+                _.isEqual( diff( [], [] ), expected )
+            );
+            t.end();
+        } );
+
+
+        t.test( "when passing nested data structures", t => {
+
+            const
+                a = {
+                    a: {
+                        b: 1
+                    }
+                },
+                b = {
+                    a: {
+                        b: 3
+                    }
+                },
+                expected = {
+                    same: null
+                };
+
+            t.ok();
+
+            t.end();
+        } );
+
         t.test( "When passing the same data structure but with different items", t => {
 
             t.test( "with an object", t => {
@@ -132,7 +175,42 @@ test( "diff", t => {
                         expected
                     )
                 );
-            
+
+                t.end();
+
+            } );
+
+            t.test( "test with no matching keys", t => {
+
+                const
+                    previous = {
+                        a: 1,
+                        b: 2
+                    },
+                    next = {
+                        a: 2
+                    },
+                    expected = {
+                        same: null,
+                        previous: {
+                            a: 1,
+                            b: 2
+                        },
+                        next: {
+                            a: 2
+                        }
+                    };
+
+
+                const d = diff( previous, next );
+                //console.log( d );
+                t.ok(
+                    _.isEqual(
+                        d,
+                        expected
+                    )
+                );
+
                 t.end();
 
             } );
