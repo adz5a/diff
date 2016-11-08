@@ -176,12 +176,34 @@ function _diff ( previous, next ) {
                 } else {
                     //if they are different push them respectively 
                     //to the previous and next arrays.
-                    nextValues.push( [ key, value ] );
-                    if ( previous.hasOwnProperty( key ) ) {
 
-                        previousValues.push( [ key, prev ] );
+                    const
+                        tp = type( prev ),
+                        tv = type( value );
+
+                    if ( tp === tv && (tp === "array" || tp === "object") ) {
+                        // we have two value of same types but different
+                        // so they must be data structures
+                        // we have to diff them
+                        const d = _diff( prev, value );
+                        console.log( d );
+
+                        throw new Error( "not implemented yet" );
+
+
+                    } else {
+                        // we proceed
+
+                        nextValues.push( [ key, value ] );
+                        if ( previous.hasOwnProperty( key ) ) {
+
+                            previousValues.push( [ key, prev ] );
+
+                        }
 
                     }
+
+
                 }
 
 
@@ -217,7 +239,7 @@ function _diff ( previous, next ) {
                     diffValue.next[ key ] = value;
 
                 } );
-                if ( sameValues.length === 0 ) {
+                if ( sameKeys.size === 0 ) {
 
                     diffValue.same = null;
 
@@ -243,11 +265,15 @@ function _diff ( previous, next ) {
                 };
 
 
-                sameKeys.forEach( key => {
+                if ( sameKeys.size === 0 ) {
+                    diffValue.same = null;
+                } else {
+                    sameKeys.forEach( key => {
 
-                    diffValue.same[ key ] = previous[ key ];
+                        diffValue.same[ key ] = previous[ key ];
 
-                } );
+                    } );
+                }
 
 
                 previousValues.forEach( ( [key, value] ) => {
