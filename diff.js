@@ -186,7 +186,6 @@ function _diff ( previous, next ) {
                         if ( tp === tn && (tp === "array" || tp === "object") ) {
 
                             const { same, previous, next } = _diff( prev, value );
-                            // different types => we update the two arrays and proceed
 
                             if ( previous !== null ) {
 
@@ -201,6 +200,7 @@ function _diff ( previous, next ) {
                             if ( same !== null ) {
 
                                 sameValues.push( [ key, same ] );
+                                sameKeys.add( key );
 
                             }
 
@@ -296,6 +296,7 @@ function _diff ( previous, next ) {
                     previous: {}
                 };
 
+                console.log( sameKeys );
 
                 if ( sameKeys.size === 0 ) {
                     diffValue.same = null;
@@ -318,7 +319,7 @@ function _diff ( previous, next ) {
                     } );
                 }
 
-                console.log( nextValues );
+                //console.log( nextValues );
 
                 if ( nextValues.length === 0 ) {
                     diffValue.next = null;
