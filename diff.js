@@ -182,8 +182,8 @@ function _diff ( previous, next ) {
                     // if not equal we have two cases
                     if ( !eq( value, prev ) ) {
 
-                        // same type => we have non strict equal data structure
-                        if ( tp === tn ) {
+                        // same type and we have non strict equal data structure
+                        if ( tp === tn && (tp === "array" || tp === "object") ) {
 
                             const { same, previous, next } = _diff( prev, value );
                             // different types => we update the two arrays and proceed
@@ -243,18 +243,34 @@ function _diff ( previous, next ) {
                 //return values will be sparse arrays
 
                 const diffValue = {};
-                diffValue.previous = new Array( previous.length );
-                previousValues.forEach( ( [key, value] ) => {
 
-                    diffValue.previous[ key ] = value;
+                if ( previousValues.length === 0 ) {
 
-                } );
-                diffValue.next = new Array( next.length );
-                nextValues.forEach( ( [key, value] ) => {
+                    diffValue.previous = null;
 
-                    diffValue.next[ key ] = value;
+                } else {
 
-                } );
+                    diffValue.previous = new Array( previous.length );
+                    previousValues.forEach( ( [key, value] ) => {
+
+                        diffValue.previous[ key ] = value;
+
+                    } );
+
+                }
+
+                if ( nextValues.length === 0 ) {
+                    diffValue.next = null;
+                } else {
+                    diffValue.next = new Array( next.length );
+                    nextValues.forEach( ( [key, value] ) => {
+
+                        diffValue.next[ key ] = value;
+
+                    } );
+                }
+
+
                 if ( sameKeys.size === 0 ) {
 
                     diffValue.same = null;
@@ -292,17 +308,28 @@ function _diff ( previous, next ) {
                 }
 
 
-                previousValues.forEach( ( [key, value] ) => {
+                if ( previousValues.length === 0 ) {
+                    diffValue.previous = null;
+                } else {
+                    previousValues.forEach( ( [key, value] ) => {
 
-                    diffValue.previous[ key ] = value;
+                        diffValue.previous[ key ] = value;
 
-                } );
+                    } );
+                }
 
-                nextValues.forEach( ( [key, value] ) => {
+                console.log( nextValues );
 
-                    diffValue.next[ key ] = value;
+                if ( nextValues.length === 0 ) {
+                    diffValue.next = null;
+                } else {
+                    nextValues.forEach( ( [key, value] ) => {
 
-                } );
+                        diffValue.next[ key ] = value;
+
+                    } );
+                }
+
 
                 return diffValue;
             }
