@@ -107,8 +107,8 @@ test( "diff", t => {
             t.ok(
                 _.isEqual( d, {
                     same: null,
-                    previous: {},
-                    next: {}
+                    previous: null,
+                    next: null
                 } )
             );
 
@@ -116,8 +116,8 @@ test( "diff", t => {
             t.ok(
                 _.isEqual( d, {
                     same: null,
-                    previous: [],
-                    next: []
+                    previous: null,
+                    next: null
                 } )
             );
             t.end();
