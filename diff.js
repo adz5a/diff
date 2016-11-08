@@ -194,7 +194,7 @@ function _diff ( previous, next ) {
                             }
                             if ( next !== null ) {
 
-                                nextValues.push( [ key, value ] );
+                                nextValues.push( [ key, next ] );
 
                             }
                             if ( same !== null ) {
@@ -205,7 +205,8 @@ function _diff ( previous, next ) {
                             }
 
                         } else {
-
+                            // we are dealing with primitives
+                            // found only in one of the structures
                             previousValues.push( [ key, prev ] );
                             nextValues.push( [ key, value ] );
 
@@ -296,7 +297,6 @@ function _diff ( previous, next ) {
                     previous: {}
                 };
 
-                console.log( sameKeys );
 
                 if ( sameKeys.size === 0 ) {
                     diffValue.same = null;
