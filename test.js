@@ -211,6 +211,22 @@ test( "diff", t => {
                     )
                 );
 
+                t.ok(
+                    _.isEqual(
+                        diff(next, previous),
+                        {
+                            same: null,
+                            previous: {
+                                a: 2
+                            },
+                            next: {
+                                a: 1,
+                                b: 2
+                            }
+                        }
+                    )
+                );
+
                 t.end();
 
             } );
