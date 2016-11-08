@@ -280,12 +280,69 @@ test( "diff", t => {
                 };
 
                 const d = diff( subset, set );
-                console.log( d );
+                //console.log( d );
                 t.ok(
                     _.isEqual( d, expect )
                 );
 
                 t.end();
+            } );
+
+
+            t.test( "test with array and objects", t => {
+
+                const chart1 = {
+                    chart: {
+                        type: "line"
+                    },
+                    series: [
+                        {
+                            data: [ 1, 2, 3 ]
+                        }
+                    ]
+                };
+
+                const chart2 = {
+                    chart: {
+                        type: "line"
+                    },
+                    series: [
+                        {
+                            data: [ 1, 2, 3, 4 ]
+                        }
+                    ]
+                };
+
+                const expected = {
+                    same: {
+                        chart: {
+                            type: "line"
+                        },
+                        series: [
+                            {
+                                data: [ 1, 2, 3 ]
+                            }
+                        ]
+                    },
+                    previous: null,
+                    next: {
+                        series: [
+                            {
+                                data: [ undefined, undefined, undefined, 4 ]
+                            }
+                        ]
+                    }
+                };
+
+                t.ok(
+                    _.isEqual(
+                        diff(chart1, chart2),
+                        expected
+                    )
+                );
+
+                t.end();
+
             } );
 
             t.end();
