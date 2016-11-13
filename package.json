@@ -1,5 +1,5 @@
 {
-  "name": "diff",
+  "name": "diff-seq",
   "version": "0.1.0",
   "description": "a recursive diff of javascript sequentiable data structures",
   "main": "diff.js",
