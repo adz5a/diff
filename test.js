@@ -1,6 +1,6 @@
 "use strict";
 const test = require( "tape" );
-const { diff, type, ObjectIterator } = require( "./diff" );
+const { diff, type } = require( "./diff2" );
 const _ = require( "lodash" );
 
 
@@ -13,7 +13,9 @@ test( "diff", t => {
             "object": {},
             "null": null,
             "number": 1,
-            "string": "string"
+            "string": "string",
+            "set": new Set(),
+            "map": new Map()
         };
 
         Object.keys( types ).forEach( typeString => {
@@ -357,64 +359,3 @@ test( "diff", t => {
 } );
 
 
-test( "ObjectIterator", t => {
-
-    const id = x => x;
-    const iteratee = ( acc, value, key ) => {
-
-        acc.push( [ value, key ] );
-        return acc;
-
-    };
-
-    t.test( "with empty object", t => {
-
-        const emptyObject = {};
-        const emptyObjectIterator = new ObjectIterator( emptyObject );
-
-        t.ok(
-            _.isEqual( emptyObjectIterator.map( x => x ), [] ),
-            "mapping returns empty array"
-        );
-
-
-        t.ok(
-            _.isEqual(
-                emptyObjectIterator.reduce( iteratee, [] ),
-                []
-            ),
-            "reducing returns empty array"
-        );
-
-        t.end();
-
-    } );
-
-
-    t.test( "with non empty object", t => {
-
-        const object = {
-            a: 1,
-            b: 2
-        };
-        const iterator = new ObjectIterator( object );
-        t.ok(
-            _.isEqual( iterator.map( id ), [ 1, 2 ] ),
-            "mapping returns an array with the values"
-        );
-
-        t.ok(
-            _.isEqual( iterator.reduce( iteratee, [] ),
-                [
-                    [ 1, "a" ],
-                    [ 2, "b" ]
-                ]
-            ),
-            "reducing an array of [value, key]"
-        );
-
-        t.end();
-
-    } );
-
-} );
