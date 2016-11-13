@@ -1,0 +1,31 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "globals": {
+    "Promise": false,
+    "__dirname": false,
+    "process": false
+  },
+  "rules": {
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-undef": [
+      "error"
+    ],
+    "no-unused-vars": [
+      2,
+      {
+        "vars": "all",
+        "args": "after-used"
+      }
+    ]
+  }
+}

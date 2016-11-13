@@ -4,10 +4,14 @@
   "description": "a recursive diff of javascript sequentiable data structures",
   "main": "diff.js",
   "scripts": {
-    "test": "node ./test.js | tap-spec"
+    "test": "node ./test.js | tap-spec",
+    "dev-bundle": "webpack-dev-server --config webpack.dev.js --hot --watch --inline",
+    "prod-bundle": "webpack --config webpack.prod.js"
   },
   "keywords": [
-    "diff", "data", "sequences"
+    "diff",
+    "data",
+    "sequences"
   ],
   "author": "antoine zimmermann",
   "license": "MIT",
