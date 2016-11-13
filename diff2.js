@@ -46,7 +46,7 @@ function rebuildObject ( valueKeys ) {
 
 function rebuildArray ( valueKeys ) {
 
-    return valueKeys.reduce( ( object, [value, key] ) => {
+    return valueKeys.reduce( ( object, [key, value] ) => {
 
         object[ key ] = value;
         return object;
@@ -55,15 +55,15 @@ function rebuildArray ( valueKeys ) {
 
 }
 
-function rebuildMap ( valueKeys ) {
+function rebuildMap ( keyValues ) {
 
-    return new Map( valueKeys );
+    return new Map( keyValues );
 
 }
 
-function rebuildSet ( valueKeys ) {
+function rebuildSet ( keyValues ) {
 
-    return new Set( valueKeys );
+    return new Set( keyValues );
 
 }
 
@@ -145,6 +145,39 @@ function diffObject ( object1, object2, { diff, rebuild } ) {
 
 }
 
+function diffSet ( s1, s2 ) {
+
+    const
+        same = new Set(),
+        previous = new Set(),
+        next = new Set();
+
+    s2.forEach( value => {
+
+        if ( s1.has( value ) ) {
+            same.add( value );
+        } else {
+            next.add( value );
+        }
+
+    } );
+
+    s1.forEach( value => {
+
+        if ( !same.has( value ) ) {
+            previous.add( value );
+        }
+
+    } );
+
+    return {
+        same: same.count > 0 ? same : null,
+        previous: previous.count > 0 ? previous : null,
+        next: next.count > 0 ? next : null
+    };
+
+}
+
 const dispatch = {
     map: {
         diff: diffObject,
@@ -157,6 +190,10 @@ const dispatch = {
     object: {
         diff: diffObject,
         rebuild: rebuildObject
+    },
+    set: {
+        diff: diffSet,
+        rebuild: () => {}
     }
 };
 

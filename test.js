@@ -3,31 +3,30 @@ const test = require( "tape" );
 const { diff, type } = require( "./diff2" );
 const _ = require( "lodash" );
 
+test( "Diff defines new types", t => {
 
-test( "diff", t => {
+    const types = {
+        "array": [],
+        "object": {},
+        "null": null,
+        "number": 1,
+        "string": "string",
+        "set": new Set(),
+        "map": new Map()
+    };
 
-    t.test( "Diff defines new types", t => {
+    Object.keys( types ).forEach( typeString => {
 
-        const types = {
-            "array": [],
-            "object": {},
-            "null": null,
-            "number": 1,
-            "string": "string",
-            "set": new Set(),
-            "map": new Map()
-        };
+        const value = types[ typeString ];
+        t.ok( type( value ) === typeString, typeString );
 
-        Object.keys( types ).forEach( typeString => {
-
-            const value = types[ typeString ];
-            t.ok( type( value ) === typeString, typeString );
-
-        } );
-
-        t.end();
     } );
 
+    t.end();
+} );
+
+
+test( "diff", t => {
 
     t.test( "diff does not accept non objects primitives", t => {
 
