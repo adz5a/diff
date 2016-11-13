@@ -10,7 +10,11 @@
   "globals": {
     "Promise": false,
     "__dirname": false,
-    "process": false
+    "process": false,
+    "Map": true,
+    "Set": true,
+    "WeakSet": true,
+    "WeakMap": true
   },
   "rules": {
     "semi": [
