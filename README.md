@@ -84,7 +84,7 @@ next = { b: 1 }
 
 ```
 
-# Example 3
+### Example 3
 With arrays
 
 ```
