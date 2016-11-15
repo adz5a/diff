@@ -32,42 +32,15 @@ function type ( o ) {
 
 }
 
-function rebuildObject ( valueKeys ) {
+/*
+ * A diffable Structure is a Javascript structures that supports the following behaviour :
+ * - you can loop on its entries
+ * - If it's key-valued you can know if it has a specific key (map, array, objects)
+ * - else you can know if it has specific value (set)
+ * - you can rebuild a substructure from it with [key values] pairs
+ */
 
-    return valueKeys.reduce( ( object, [key, value] ) => {
-
-        object[ key ] = value;
-        return object;
-
-    }, {} );
-
-}
-
-
-function rebuildArray ( valueKeys ) {
-
-    return valueKeys.reduce( ( object, [key, value] ) => {
-
-        object[ key ] = value;
-        return object;
-
-    }, [] );
-
-}
-
-function rebuildMap ( keyValues ) {
-
-    return new Map( keyValues );
-
-}
-
-function rebuildSet ( keyValues ) {
-
-    return new Set( keyValues );
-
-}
-
-function diffObject ( object1, object2, { diff, rebuild } ) {
+function diffObject ( object1, object2, { diff, rebuild, forEach, has } ) {
 
 
     const
@@ -77,14 +50,10 @@ function diffObject ( object1, object2, { diff, rebuild } ) {
 
     const sameKeys = new Set();
 
-    const
-        keys1 = new Set( Object.keys( object1 ) ),
-        keys2 = Object.keys( object2 );
 
+    forEach( object2, ( value, key2 ) => {
 
-    keys2.forEach( key2 => {
-
-        if ( keys1.has( key2 ) ) {
+        if ( has( object1, key2 ) ) {
 
             sameKeys.add( key2 );
 
@@ -126,7 +95,7 @@ function diffObject ( object1, object2, { diff, rebuild } ) {
 
     } );
 
-    keys1.forEach( key1 => {
+    forEach( object1, ( value, key1 ) => {
 
         if ( !sameKeys.has( key1 ) ) {
 
@@ -137,9 +106,9 @@ function diffObject ( object1, object2, { diff, rebuild } ) {
     } );
 
     return {
-        same: sameKeyValues.length > 0 ? rebuild( sameKeyValues ) : null,
-        previous: object1UniqueKeyValues.length > 0 ? rebuild( object1UniqueKeyValues ) : null,
-        next: object2UniqueKeyValues.length > 0 ? rebuild( object2UniqueKeyValues ) : null
+        same: sameKeyValues.length > 0 ? rebuild( sameKeyValues, object2 ) : null,
+        previous: object1UniqueKeyValues.length > 0 ? rebuild( object1UniqueKeyValues, object1 ) : null,
+        next: object2UniqueKeyValues.length > 0 ? rebuild( object2UniqueKeyValues, object2 ) : null
     };
 
 
@@ -178,36 +147,97 @@ function diffSet ( s1, s2 ) {
 
 }
 
-const dispatch = {
-    map: {
-        diff: diffObject,
-        rebuild: rebuildMap
+const array = {
+    forEach( array, fn ) {
+
+        array.forEach( fn );
+
     },
-    array: {
-        diff: diffObject,
-        rebuild: rebuildArray
+    has( array, key ) {
+
+        return array.hasOwnProperty( key );
+
     },
-    object: {
-        diff: diffObject,
-        rebuild: rebuildObject
+    get( array, key ) {
+        return array[ key ];
     },
-    set: {
-        diff: diffSet,
-        rebuild: () => {}
-    }
+    rebuild( keyValues, original ) {
+
+        const result = new Array( original.length );
+        return keyValues.reduce( ( array, [key, value] ) => {
+
+            array[ key ] = value;
+
+            return array;
+        }, result );
+
+    },
+    diff: diffObject
+};
+const object = {
+    forEach( object, fn ) {
+
+        Object.keys( object ).forEach( key => {
+            fn( object[ key ], key );
+        } );
+
+    },
+    has( object, key ){
+
+        return object.hasOwnProperty( key );
+
+    },
+    get( object, key ) {
+        return object[ key ];
+    },
+    rebuild( keyValues ) {
+        return keyValues.reduce( ( object, [key, value] ) => {
+
+            object[ key ] = value;
+            return object;
+
+        }, {} );
+
+    },
+    diff: diffObject
+};
+const map = {
+    forEach( map, fn ) {
+
+        map.forEach( fn );
+
+    },
+    has( map, key ) {
+
+        return map.has( key );
+
+    },
+    get( map, key ) {
+        return map.get( key );
+    },
+    rebuild( keyValues ) {
+        return new Map( keyValues );
+
+    },
+    diff: diffObject
 };
 
-function _diff ( o1, o2 ) {
 
-    const t = type( o1 );
-    return dispatch[ t ].diff( o1, o2, {
-        rebuild: dispatch[ t ].rebuild,
-        diff: _diff
-    } );
+const set = {
+    diff: diffSet
+};
 
-}
+
+const dispatch = {
+    map,
+    array,
+    object,
+    set
+};
+
 
 function diff ( o1, o2 ) {
+
 
     const
         t1 = type( o1 ),
@@ -224,10 +254,31 @@ function diff ( o1, o2 ) {
 
     } else {
 
-        return _diff( o1, o2 );
+        const wrappedDispatch = {};
+        const _diff = ( o1, o2 ) => {
+
+            const t = type( o1 );
+
+            return dispatch[ t ].diff( o1, o2, wrappedDispatch[ t ] );
+
+        };
+
+        dispatch.object.forEach( dispatch, ( methods, type ) => {
+
+            wrappedDispatch[ type ] = Object.assign(
+                {},
+                methods,
+                {
+                    diff: _diff
+                }
+            );
+
+        } );
+
+        return _diff( o1, o2, wrappedDispatch[ t1 ] );
 
     }
 
 }
 
-module.exports = { type, diffable, rebuildObject, diffObject, rebuildArray, rebuildSet, rebuildMap, diff };
+module.exports = { type, diffable, diffObject, diff, dispatch };

@@ -276,7 +276,7 @@ test( "diff", t => {
                 const set = [ 1, 2, 3 ];
                 const subset = [ 1, 2 ];
                 const expect = {
-                    same: [ 1, 2 ],
+                    same: [ 1, 2, undefined ],
                     previous: null,
                     next: [ undefined, undefined, 3 ]
                 };
@@ -322,7 +322,7 @@ test( "diff", t => {
                         },
                         series: [
                             {
-                                data: [ 1, 2, 3 ]
+                                data: [ 1, 2, 3, undefined ]
                             }
                         ]
                     },
