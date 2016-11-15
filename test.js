@@ -257,12 +257,13 @@ test( "diff", t => {
                     previous = [ 1, 2 ],
                     next = [ 1, 3, 4 ],
                     expected = {
-                        same: [ 1 ],
+                        same: [ 1, undefined, undefined ],
                         previous: [ undefined, 2 ],
                         next: [ undefined, 3, 4 ]
                     };
 
                 const res = diff( previous, next );
+
 
                 t.ok( _.isEqual( res, expected ) );
 
@@ -337,7 +338,7 @@ test( "diff", t => {
 
                 t.ok(
                     _.isEqual(
-                        diff(chart1, chart2),
+                        diff( chart1, chart2 ),
                         expected
                     )
                 );
